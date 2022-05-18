@@ -6,6 +6,7 @@ int findInsId(InstrumentTree tree, char* instrument) {
 	int id = findInsIdRec(root, instrument);
 }
 
+
 int findInsIdRec(TreeNode* root, char* instrument) {
 	// find the index of the instrument recorsive
 	int indRight, indLeft;
