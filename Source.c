@@ -10,4 +10,6 @@ void main(int argc, char* argv[]) {
 	checkFile(f);
 	tr.root = BuildTheTree(f ,tr.root);
 
+	mair
+		tomer
 }
