@@ -5,7 +5,7 @@ void main(int argc, char* argv[])
 	FILE* f;
 	InstrumentTree tr;
 	tr.root = NULL;
-	int treeSize;
+	int treeSize; // the size of the tree
 
 	// question 1
 	f = fopen(argv[1], "r");
