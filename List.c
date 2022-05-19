@@ -1,5 +1,48 @@
 #include "Header.h"
 
+void buildMusiciansCollection(Musician*** MusiciansCollection, Musician** MusicianGroup, InstrumentTree tr, int musicianNum, int treeSize) {
+// Build the musicians collection that point from the instrument to the musician
+	
+	for (int i = 0; i < treeSize; i++) {
+		MusiciansCollection[i] = (Musician**)malloc(sizeof(Musician*));
+		MusiciansCollection[i][0] = (Musician*)malloc(sizeof(Musician)); // at least 1 musician
+		MusiciansCollection[i][0]->logSize = 0;
+		MusiciansCollection[i][0]->psySize = 1;
+	}
+
+	for (int i = 0; i < musicianNum; i++) {
+		updateMusicianCollectionByInstrumentList(MusiciansCollection, MusicianGroup[i], MusicianGroup[i]->instruments.head);
+	}
+		
+}
+
+void updateMusicianCollectionByInstrumentList(Musician*** MusiciansCollectionInstru, Musician* musicianTmp,ListNode* head)
+{
+	ListNode* curr = head;
+	int index, nextInx;
+
+	while (curr != NULL) {
+		index = curr->mpi->insId; // get the instrument id that the singer is playing with
+		nextInx = checkSize(MusiciansCollectionInstru[index]); // check the size of the singers array inside the instrument array
+		MusiciansCollectionInstru[index][nextInx] = musicianTmp;
+		MusiciansCollectionInstru[index][0]->logSize++;
+		curr = curr->next;
+	}
+
+}
+
+int checkSize(Musician** tmp) {
+	if (tmp[0]->logSize == tmp[0]->psySize) {
+		tmp[0]->psySize *= 2;
+		tmp = realloc(tmp, tmp[0]->psySize);
+	}
+	if (tmp[0]->logSize == 0)
+		return 0;
+
+	return tmp[0]->logSize;
+}
+
+
 TreeNode* BuildTheTree(FILE* f, TreeNode* root, int* counter) {
 	// build the tree from the file
 	char str[150];
@@ -96,7 +139,7 @@ TreeNode* checkLocationInTree(TreeNode* root, char* ch, int* way) {
 	}
 }
 
-void buildMusicianGroupArr(FILE* musiciansFile, Musician*** musicianArr, InstrumentTree tree)
+int buildMusicianGroupArr(FILE* musiciansFile, Musician*** musicianArr, InstrumentTree tree)
 {
 	int i, nofMusicians = countNofMusicians(musiciansFile);
 	Musician** musicianGroup = (Musician**)malloc(nofMusicians * sizeof(Musician*));
@@ -123,6 +166,8 @@ void buildMusicianGroupArr(FILE* musiciansFile, Musician*** musicianArr, Instrum
 		freeArr(subStringsArr, nofSubStrings);
 	}
 	*musicianArr = musicianGroup;
+
+	return nofMusicians;
 }
 
 int countNofMusicians(FILE* musiciansFile)
@@ -323,3 +368,4 @@ void checkFile(FILE* f)
 		exit(-1);
 	}
 }
+
