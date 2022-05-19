@@ -53,7 +53,7 @@ typedef struct tree
 int findInsId(InstrumentTree tree, char* instrument);
 int findInsIdRec(TreeNode* root, char* instrument);
 TreeNode* checkLocationInTree(TreeNode* root, char* ch, int* way);
-TreeNode* BuildTheTree(FILE* f, TreeNode* root);
+TreeNode* BuildTheTree(FILE* f, TreeNode* root, int* counter);
 TreeNode* createNewTreeNode(char* str, unsigned short count, TreeNode* left, TreeNode* right);
 
 void buildMusicianGroupArr(FILE* musiciansFile, Musician*** musicianArr, InstrumentTree tree);

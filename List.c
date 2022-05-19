@@ -1,6 +1,6 @@
 #include "Header.h"
 
-TreeNode* BuildTheTree(FILE* f, TreeNode* root) {
+TreeNode* BuildTheTree(FILE* f, TreeNode* root, int* counter) {
 	// build the tree from the file
 	char str[150];
 	TreeNode* newNode;
@@ -27,6 +27,7 @@ TreeNode* BuildTheTree(FILE* f, TreeNode* root) {
 
 	fclose(f); // close file
 
+	*counter = count;
 	return root;
 }
 
@@ -93,14 +94,6 @@ TreeNode* checkLocationInTree(TreeNode* root, char* ch, int* way) {
 			left = checkLocationInTree(root->left, ch, way);
 		return left;
 	}
-
-	// check this with debugger
-	/*
-	if (right != NULL)
-		return right;
-	else
-		return left;
-	*/
 }
 
 void buildMusicianGroupArr(FILE* musiciansFile, Musician*** musicianArr, InstrumentTree tree)
