@@ -15,3 +15,4 @@ void main(int argc, char* argv[])
 	Musician** MusicianGroup;
 	buildMusicianGroupArr(musiciansFile, &MusicianGroup, tr);
 }
+	
