@@ -29,6 +29,12 @@ typedef struct musician
 	MPIList instruments; // MusicianPriceInstrument כלי הנגינה ברשימה מקושרת של
 } Musician;
 
+/* struct for the musician collection to know the musician array size all the time. */
+typedef struct musiciansCollectionOfMusicians {
+	Musician** arr;
+	int logSize; // actual size
+	int psySize; // memory size
+} IMix ;
 
 typedef struct treeNode {
 	char instrument[150]; // name 
@@ -56,7 +62,7 @@ TreeNode* checkLocationInTree(TreeNode* root, char* ch, int* way);
 TreeNode* BuildTheTree(FILE* f, TreeNode* root, int* counter);
 TreeNode* createNewTreeNode(char* str, unsigned short count, TreeNode* left, TreeNode* right);
 
-void buildMusicianGroupArr(FILE* musiciansFile, Musician*** musicianArr, InstrumentTree tree);
+int buildMusicianGroupArr(FILE* musiciansFile, Musician*** musicianArr, InstrumentTree tree);
 int countNofMusicians(FILE* musiciansFile);
 char** buildArrOfSubStrings(FILE* musiciansFile, int* nofSubStrings);
 int getMusicianName(char** subStringsArr, Musician** curMusician, unsigned short* firstInsId, InstrumentTree tree);
@@ -75,3 +81,9 @@ void freeListRec(ListNode* head);
 
 void checkMemoryAllocation(void* ptr);
 void checkFile(FILE* f);
+
+void buildMusiciansCollection(IMix* MusiciansCollection, Musician** MusicianGroup, int musicianNum, int treeSize);
+void updateMusicianCollectionByInstrumentList(IMix* MusiciansCollectionInstru, Musician* musicianTmp, ListNode* head);
+int checkSize(IMix* tmp);
+void buildMemoryCollection(IMix* MusiciansCollection, int treeSize);
+void printMusicianCollection(IMix* MusiciansCollection, int treeSize);

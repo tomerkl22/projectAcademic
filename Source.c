@@ -6,6 +6,7 @@ void main(int argc, char* argv[])
 	InstrumentTree tr;
 	tr.root = NULL;
 	int treeSize; // the size of the tree
+	int numOfmusician;
 
 	// question 1
 	f = fopen(argv[1], "r");
@@ -16,10 +17,14 @@ void main(int argc, char* argv[])
 	FILE* musiciansFile = fopen(argv[2], "r");
 	checkFile(musiciansFile);
 	Musician** MusicianGroup;
-	buildMusicianGroupArr(musiciansFile, &MusicianGroup, tr);
+	numOfmusician = buildMusicianGroupArr(musiciansFile, &MusicianGroup, tr);
+	
 	
 	// question 4
-	Musician** MusiciansCollection = (Musician**)malloc(sizeof(Musician*) * treeSize); 
-	buildMuiciansCollection(MusiciansCollection, treeSize);
-}
 	
+	IMix* MusiciansCollection = (IMix*)malloc(sizeof(IMix) * treeSize);
+	buildMusiciansCollection(MusiciansCollection, MusicianGroup, numOfmusician, treeSize);
+	
+	// DONT FORGET TO FREE EVERYTHING!
+
+}
