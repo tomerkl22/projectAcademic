@@ -27,15 +27,14 @@ typedef struct musician
 	char** name; // מערך של השמות המרכיבים את שמו המלא
 	int nameParts;
 	MPIList instruments; // MusicianPriceInstrument כלי הנגינה ברשימה מקושרת של
-	int logSize; // actual size
-	int psySize; // memory size
 } Musician;
 
+/* struct for the musician collection to know the musician array size all the time. */
 typedef struct musiciansCollectionOfMusicians {
 	Musician** arr;
 	int logSize; // actual size
 	int psySize; // memory size
-};
+} IMix ;
 
 typedef struct treeNode {
 	char instrument[150]; // name 
@@ -83,6 +82,8 @@ void freeListRec(ListNode* head);
 void checkMemoryAllocation(void* ptr);
 void checkFile(FILE* f);
 
-void buildMusiciansCollection(Musician*** MusiciansCollection, Musician** MusicianGroup, InstrumentTree tr, int musicianNum, int treeSize);
-void updateMusicianCollectionByInstrumentList(Musician*** MusiciansCollectionInstru, Musician* musicianTmp, ListNode* head);
-int checkSize(Musician** tmp);
+void buildMusiciansCollection(IMix* MusiciansCollection, Musician** MusicianGroup, int musicianNum, int treeSize);
+void updateMusicianCollectionByInstrumentList(IMix* MusiciansCollectionInstru, Musician* musicianTmp, ListNode* head);
+int checkSize(IMix* tmp);
+void buildMemoryCollection(IMix* MusiciansCollection, int treeSize);
+void printMusicianCollection(IMix* MusiciansCollection, int treeSize);

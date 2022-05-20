@@ -21,7 +21,10 @@ void main(int argc, char* argv[])
 	
 	
 	// question 4
-	Musician*** MusiciansCollection = (Musician***)malloc(sizeof(Musician**) * treeSize);
-	buildMusiciansCollection(MusiciansCollection, MusicianGroup, tr, numOfmusician, treeSize);
 	
-	}
+	IMix* MusiciansCollection = (IMix*)malloc(sizeof(IMix) * treeSize);
+	buildMusiciansCollection(MusiciansCollection, MusicianGroup, numOfmusician, treeSize);
+	
+	// DONT FORGET TO FREE EVERYTHING!
+
+}

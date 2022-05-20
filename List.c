@@ -1,45 +1,56 @@
 #include "Header.h"
 
-void buildMusiciansCollection(Musician*** MusiciansCollection, Musician** MusicianGroup, InstrumentTree tr, int musicianNum, int treeSize) {
+void buildMusiciansCollection(IMix* MusiciansCollection, Musician** MusicianGroup, int musicianNum, int treeSize) {
 // Build the musicians collection that point from the instrument to the musician
 	
-	for (int i = 0; i < treeSize; i++) {
-		MusiciansCollection[i] = (Musician**)malloc(sizeof(Musician*));
-		MusiciansCollection[i][0] = (Musician*)malloc(sizeof(Musician)); // at least 1 musician
-		MusiciansCollection[i][0]->logSize = 0;
-		MusiciansCollection[i][0]->psySize = 1;
-	}
-
+	buildMemoryCollection(MusiciansCollection, treeSize);
 	for (int i = 0; i < musicianNum; i++) {
 		updateMusicianCollectionByInstrumentList(MusiciansCollection, MusicianGroup[i], MusicianGroup[i]->instruments.head);
+	}
+	Musician* tmp = MusiciansCollection[0].arr[3];
+
+
+	// realloc the memory of the final sizes arrays
+	for (int i = 0; i < musicianNum; i++) {
+		int size = MusiciansCollection[i].logSize;
+		MusiciansCollection[i].arr = realloc(MusiciansCollection[i].arr, sizeof(Musician**) * size);
 	}
 		
 }
 
-void updateMusicianCollectionByInstrumentList(Musician*** MusiciansCollectionInstru, Musician* musicianTmp,ListNode* head)
-{
+void buildMemoryCollection(IMix* MusiciansCollection, int treeSize) {
+	// malloc the array
+	for (int i = 0; i < treeSize; i++) {
+		MusiciansCollection[i].arr = (Musician**)malloc(sizeof(Musician*));
+		MusiciansCollection[i].arr[0] = (Musician*)malloc(sizeof(Musician)); // at least 1 musician
+		MusiciansCollection[i].logSize = 0;
+		MusiciansCollection[i].psySize = 1;
+	}
+}
+
+void updateMusicianCollectionByInstrumentList(IMix* MusiciansCollectionInstru, Musician* musicianTmp,ListNode* head)
+{ // Go through the list of the instrument and update the musician collection
+
 	ListNode* curr = head;
 	int index, nextInx;
 
 	while (curr != NULL) {
 		index = curr->mpi->insId; // get the instrument id that the singer is playing with
-		nextInx = checkSize(MusiciansCollectionInstru[index]); // check the size of the singers array inside the instrument array
-		MusiciansCollectionInstru[index][nextInx] = musicianTmp;
-		MusiciansCollectionInstru[index][0]->logSize++;
+		nextInx = checkSize(&(MusiciansCollectionInstru[index])); // check the size of the singers array inside the instrument array
+		MusiciansCollectionInstru[index].arr[nextInx] = musicianTmp;
+		MusiciansCollectionInstru[index].logSize++;
 		curr = curr->next;
 	}
 
 }
 
-int checkSize(Musician** tmp) {
-	if (tmp[0]->logSize == tmp[0]->psySize) {
-		tmp[0]->psySize *= 2;
-		tmp = realloc(tmp, tmp[0]->psySize);
+int checkSize(IMix* tmp) {
+	// check the size of array. if needed realloc it
+	if (tmp->logSize == tmp->psySize) {
+		tmp->psySize *= 2;
+		tmp->arr = realloc(tmp->arr, sizeof(Musician**)*tmp->psySize);
 	}
-	if (tmp[0]->logSize == 0)
-		return 0;
-
-	return tmp[0]->logSize;
+	return tmp->logSize;
 }
 
 
@@ -369,3 +380,12 @@ void checkFile(FILE* f)
 	}
 }
 
+void printMusicianCollection(IMix* MusiciansCollection, int treeSize) {
+	// print the musician collection - just for SELF checking
+	for (int i = 0; i < treeSize; i++) {
+		printf("%d - %d %d ", i, MusiciansCollection[i].logSize, MusiciansCollection[i].psySize);
+		for (int j = 0; j < MusiciansCollection[i].logSize; j++)
+			printf("%s, ", MusiciansCollection[i].arr[j]->name[0]);
+		printf("\n");
+	}
+}
