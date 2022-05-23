@@ -1,43 +1,52 @@
 #include "Header.h"
 
 void buildMusiciansCollection(IMix* MusiciansCollection, Musician** MusicianGroup, int musicianNum, int treeSize) {
-// Build the musicians collection that point from the instrument to the musician
-	
+	// Build the musicians collection that point from the instrument to the musician
+
 	buildMemoryCollection(MusiciansCollection, treeSize);
+
 	for (int i = 0; i < musicianNum; i++) {
 		updateMusicianCollectionByInstrumentList(MusiciansCollection, MusicianGroup[i], MusicianGroup[i]->instruments.head);
 	}
-	Musician* tmp = MusiciansCollection[0].arr[3];
-
 
 	// realloc the memory of the final sizes arrays
 	for (int i = 0; i < musicianNum; i++) {
 		int size = MusiciansCollection[i].logSize;
-		MusiciansCollection[i].arr = realloc(MusiciansCollection[i].arr, sizeof(Musician**) * size);
+		int pizS = MusiciansCollection[i].psySize;
+		for (int j = size; j < pizS; j++) {
+			// free the not relavent malloc ! 
+			free(MusiciansCollection[i].arr[j]->musicianPtr);
+			free(MusiciansCollection[i].arr[j]);
+		}
+		MusiciansCollection[i].arr = (MusicianPtrByIns**)realloc(MusiciansCollection[i].arr, sizeof(MusicianPtrByIns*) * size);
 	}
-		
+
 }
 
 void buildMemoryCollection(IMix* MusiciansCollection, int treeSize) {
 	// malloc the array
 	for (int i = 0; i < treeSize; i++) {
-		MusiciansCollection[i].arr = (Musician**)malloc(sizeof(Musician*));
-		MusiciansCollection[i].arr[0] = (Musician*)malloc(sizeof(Musician)); // at least 1 musician
+		MusiciansCollection[i].arr = (MusicianPtrByIns**)malloc(sizeof(MusicianPtrByIns*));
+		MusiciansCollection[i].arr[0] = (MusicianPtrByIns*)malloc(sizeof(MusicianPtrByIns)); // at least 1 musician
+		MusiciansCollection[i].arr[0]->musicianPtr = (Musician*)malloc(sizeof(Musician));
 		MusiciansCollection[i].logSize = 0;
 		MusiciansCollection[i].psySize = 1;
 	}
 }
 
-void updateMusicianCollectionByInstrumentList(IMix* MusiciansCollectionInstru, Musician* musicianTmp,ListNode* head)
+void updateMusicianCollectionByInstrumentList(IMix* MusiciansCollectionInstru, Musician* musicianTmp, ListNode* head)
 { // Go through the list of the instrument and update the musician collection
 
 	ListNode* curr = head;
 	int index, nextInx;
+	float curPrice;
 
 	while (curr != NULL) {
-		index = curr->mpi->insId; // get the instrument id that the singer is playing with
-		nextInx = checkSize(&(MusiciansCollectionInstru[index])); // check the size of the singers array inside the instrument array
-		MusiciansCollectionInstru[index].arr[nextInx] = musicianTmp;
+		index = curr->mpi->insId; // get the instrument id that the ***musician*** is playing with
+		curPrice = curr->mpi->price;
+		nextInx = checkSize(&(MusiciansCollectionInstru[index])); // check the size of the ***musician*** array inside the instrument array
+		MusiciansCollectionInstru[index].arr[nextInx]->musicianPtr = musicianTmp;
+		MusiciansCollectionInstru[index].arr[nextInx]->priceForIns = curPrice;
 		MusiciansCollectionInstru[index].logSize++;
 		curr = curr->next;
 	}
@@ -48,11 +57,15 @@ int checkSize(IMix* tmp) {
 	// check the size of array. if needed realloc it
 	if (tmp->logSize == tmp->psySize) {
 		tmp->psySize *= 2;
-		tmp->arr = realloc(tmp->arr, sizeof(Musician**)*tmp->psySize);
+		tmp->arr = (MusicianPtrByIns**) realloc(tmp->arr, sizeof(MusicianPtrByIns*) * tmp->psySize);
+		int logs = tmp->logSize, pizS = tmp->psySize;
+		for (int i = logs; i < pizS; i++) {
+			tmp->arr[i] = (MusicianPtrByIns*)malloc(sizeof(MusicianPtrByIns));
+			tmp->arr[i]->musicianPtr = (Musician*)malloc(sizeof(Musician));
+		}
 	}
 	return tmp->logSize;
 }
-
 
 TreeNode* BuildTheTree(FILE* f, TreeNode* root, int* counter) {
 	// build the tree from the file
@@ -385,7 +398,7 @@ void printMusicianCollection(IMix* MusiciansCollection, int treeSize) {
 	for (int i = 0; i < treeSize; i++) {
 		printf("%d - %d %d ", i, MusiciansCollection[i].logSize, MusiciansCollection[i].psySize);
 		for (int j = 0; j < MusiciansCollection[i].logSize; j++)
-			printf("%s, ", MusiciansCollection[i].arr[j]->name[0]);
+			printf("%s, price: %f | ", MusiciansCollection[i].arr[j]->musicianPtr->name[0], MusiciansCollection[i].arr[j]->priceForIns);
 		printf("\n");
 	}
 }

@@ -18,13 +18,14 @@ void main(int argc, char* argv[])
 	checkFile(musiciansFile);
 	Musician** MusicianGroup;
 	numOfmusician = buildMusicianGroupArr(musiciansFile, &MusicianGroup, tr);
-	
-	
+
+
 	// question 4
-	
+
 	IMix* MusiciansCollection = (IMix*)malloc(sizeof(IMix) * treeSize);
 	buildMusiciansCollection(MusiciansCollection, MusicianGroup, numOfmusician, treeSize);
-	
+
+	printMusicianCollection(MusiciansCollection, treeSize);
 	// DONT FORGET TO FREE EVERYTHING!
 
 }
