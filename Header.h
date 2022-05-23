@@ -27,14 +27,22 @@ typedef struct musician
 	char** name; // מערך של השמות המרכיבים את שמו המלא
 	int nameParts;
 	MPIList instruments; // MusicianPriceInstrument כלי הנגינה ברשימה מקושרת של
+	bool freeToPlay;
 } Musician;
+
+typedef struct musicianPtrByIns
+{
+	Musician* musicianPtr;
+	float priceForIns;  //price of current musician for current instrument
+} MusicianPtrByIns;
+
 
 /* struct for the musician collection to know the musician array size all the time. */
 typedef struct musiciansCollectionOfMusicians {
-	Musician** arr;
+	MusicianPtrByIns** arr;
 	int logSize; // actual size
 	int psySize; // memory size
-} IMix ;
+} IMix;
 
 typedef struct treeNode {
 	char instrument[150]; // name 
