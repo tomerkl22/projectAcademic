@@ -1,4 +1,4 @@
-#include "finalProjectHeader.h"
+#include "Header.h"
 
 // question 1 functions
 
@@ -305,7 +305,6 @@ void buildMusiciansCollection(IMix* MusiciansCollection, Musician** MusicianGrou
 		int pizS = MusiciansCollection[i].psySize;
 		for (int j = size; j < pizS; j++) {
 			// free the not relavent malloc ! 
-													//free(MusiciansCollection[i].arr[j]->musicianPtr);  ************not needed - double malloc*********
 			free(MusiciansCollection[i].arr[j]);
 		}
 		MusiciansCollection[i].arr = (MusicianPtrByIns**)realloc(MusiciansCollection[i].arr, sizeof(MusicianPtrByIns*) * size);
@@ -321,7 +320,6 @@ void buildMemoryCollection(IMix* MusiciansCollection, int treeSize) {
 		checkMemoryAllocation(MusiciansCollection[i].arr);
 		MusiciansCollection[i].arr[0] = (MusicianPtrByIns*)malloc(sizeof(MusicianPtrByIns)); // at least 1 musician
 		checkMemoryAllocation(MusiciansCollection[i].arr[0]);
-		//MusiciansCollection[i].arr[0]->musicianPtr = (Musician*)malloc(sizeof(Musician));   ************not needed - double malloc, just need to asign the previous address allocated befor****
 		MusiciansCollection[i].logSize = 0;
 		MusiciansCollection[i].psySize = 1;
 	}
@@ -356,7 +354,6 @@ int checkSize(IMix* tmp) {
 		for (int i = logs; i < pizS; i++) {
 			tmp->arr[i] = (MusicianPtrByIns*)malloc(sizeof(MusicianPtrByIns));
 			checkMemoryAllocation(tmp->arr[i]);
-			//tmp->arr[i]->musicianPtr = (Musician*)malloc(sizeof(Musician));   ************not needed - double malloc********
 		}
 	}
 	return tmp->logSize;
